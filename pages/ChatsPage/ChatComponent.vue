@@ -4,19 +4,16 @@
       <v-card-title>Chat with {{ peer.displayName }}</v-card-title>
       <hr>
       <v-card-text>
-        <v-list>
-          <div class="d-flex"
-            v-for="(message, index) in messages"
-            :key="message.timestamp"
-            :class="message.senderId === authStore.user.uid ? 'justify-end': 'justify-start'"
-          >
-          <div class="d-flex flex-column"  :class="message.senderId === authStore.user.uid ? 'message-right' : 'message-left'">
-            <v-list-item-title class="mb-3">{{ message.senderId === authStore.user.uid ? 'You' : peer.displayName }}</v-list-item-title>
-            <p class="mb-3">{{ message.message }}</p>
-            <v-list-item-subtitle class="text-right">{{ formatTimestamp(message.timestamp) }}</v-list-item-subtitle>
-          </div>
-              
-            
+        <v-list class="chat-container" id="messagesContainer">
+          <div class="d-flex" v-for="(message, index) in messages" :key="message.timestamp"
+            :class="message.senderId === authStore.user.uid ? 'justify-end' : 'justify-start'">
+            <div class="d-flex flex-column"
+              :class="message.senderId === authStore.user.uid ? 'message-right' : 'message-left'">
+              <v-list-item-title class="mb-3">{{ message.senderId === authStore.user.uid ? 'You' : peer.displayName
+                }}</v-list-item-title>
+              <p class="mb-3">{{ message.message }}</p>
+              <v-list-item-subtitle class="text-right">{{ formatTimestamp(message.timestamp) }}</v-list-item-subtitle>
+            </div>
           </div>
         </v-list>
       </v-card-text>
@@ -47,13 +44,35 @@ const messages = ref([])
 const newMessage = ref('')
 const currentUser = ref('');
 
-// const sendMessage = async () => {
-//     const selectedPeer = props.peer.uid
-//     const currentUserId = currentUser.value.uid
-//     console.log('currentUserId', currentUserId, selectedPeer);
+const scrollToBottom = () => {
+  const container = document.getElementById('messagesContainer');
+  if (container) {
+    console.log('asdasd', container);
+    container.scrollTop = container.scrollHeight
+  } else {
+    console.log('scrool noooo', container);
+  }
+ 
+};
 
-//     messageStore.sendMessage(currentUserId, selectedPeer, newMessage.value)
-//   };
+watch(
+  () => props.peer,
+  async (newPeer) => {
+    if (newPeer) {
+      console.log('asd');
+      scrollToBottom();
+    }
+  },
+  { immediate: true }
+);
+
+watch(
+  () => messages.value,
+  () => {
+    console.log('asd');
+    scrollToBottom();
+  }
+);
 
 const sendMessage = async () => {
   const selectedPeer = props.peer.uid
@@ -68,17 +87,6 @@ const sendMessage = async () => {
 const formatTimestamp = (timestamp) => {
   return format(new Date(timestamp), 'yyyy-MM-dd HH:mm'); // Example format
 };
-
-// watch(props.peer, async (peer) => {
-//   console.log('here');
-//   if (peer) {
-//     const roomId = generateRoomId(authStore.user.uid, peer.uid);
-//     getMessages(roomId, (newMessages) => {
-//       console.log('newMessages', newMessages);
-//       messages.value = newMessages;
-//     });
-//   }
-// });
 
 watchEffect(() => {
   currentUser.value = authStore.user
@@ -95,8 +103,16 @@ watchEffect(() => {
 </script>
 
 <style scoped>
+
+.chat-container{
+  height: 70vh;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
 .message-left {
-  background-color: #e0e0e0; /* Light gray for received messages */
+  background-color: #e0e0e0;
+  /* Light gray for received messages */
   padding: 10px;
   margin: 5px;
   border-radius: 10px;
@@ -106,7 +122,8 @@ watchEffect(() => {
 }
 
 .message-right {
-  background-color: #007bff; /* Blue for sent messages */
+  background-color: #007bff;
+  /* Blue for sent messages */
   color: white;
   padding: 10px;
   margin: 5px;
@@ -116,5 +133,3 @@ watchEffect(() => {
   max-width: 70%;
 }
 </style>
-
-

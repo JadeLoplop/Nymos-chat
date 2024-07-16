@@ -2,13 +2,9 @@
   <v-card>
     <v-card-title>Peers</v-card-title>
     <v-text-field v-model="peer" label="Seach peers" @keyup.stop="searchPeers"></v-text-field>
-    <!-- <v-card-actions>
-      <v-autocomplete v-model="selectedPeer" :items="filteredUsers.map(x=> x.displayName)" item-text="displayName" item-value="uid"
-        label="Search peer" clearable @change="selectUser" return-object></v-autocomplete>
-    </v-card-actions> -->
 
-    <!-- Display filtered peers -->
-    <v-list>
+    <template v-if="users.length <= 0">
+    <v-list >
       <v-list-item v-for="(user, index) in peers" :key="index" @click="selectUser(user)"
         :class="{ 'v-list-item--active': selectedPeer && selectedPeer.uid === user.uid }">
         <v-list-item-content>
@@ -16,6 +12,18 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
+  </template>
+  <template v-else>
+    <v-list >
+      <v-list-item v-for="(user, index) in users" :key="index" @click="selectUser(user)"
+        :class="{ 'v-list-item--active': selectedPeer && selectedPeer.uid === user.uid }">
+        <v-list-item-content>
+          <v-list-item-title>{{ user.displayName }}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+  </template>
+
   </v-card>
 </template>
 
@@ -27,39 +35,52 @@ import { usePeerStore } from '@stores/peer';
 const authStore = useAuthStore();
 const peerStore = usePeerStore();
 
-const peers = ref(peerStore.fetchAllPeers);
+const peers = ref([]);
+const users = ref([]);
 const peer = ref('');
 
 const selectedPeer = ref(null)
 
 const searchPeers = () => {
+  peerStore.retrieveAuthUsers();
+  
   const query = peer.value.toLowerCase();
   if (!query.trim()) {
-    peers.value = peerStore.fetchAllPeers;
+    users.value = []
   } else {
-    peers.value = peerStore.fetchAllPeers.filter(user =>
+    users.value = peerStore.fetchAllUsers.filter(user =>
       user.displayName.toLowerCase().includes(query)
     );
   }
 
-  console.log(peers.value);
+  console.log('search value', peers.value);
+
 };
 const emits = defineEmits(['select-user']);
 
 const selectUser = (user) => {
   selectedPeer.value = user
+  users.value = []
+  peer.value = ''
   emits('select-user', user);
 };
 
 onMounted(() => {
   if (authStore.user) {
-    peerStore.retrieveAuthUsers();
+    peerStore.getPreviouslyContactedPeers(authStore.user.uid)
   }
 });
 
+watch(peer)
+watch(users)
 watch(peerStore.fetchAllPeers, (newPeers) => {
+  console.log('newpeers', newPeers);
   peers.value = newPeers;
 });
+
+watchEffect(() => {
+
+})
 </script>
 
 <style scoped>

@@ -2,7 +2,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="4">
+      <v-col cols="4" class="peers-container">
         <PeersComponent @select-user="handleSelectUser" />
       </v-col>
       <v-col cols="8">
@@ -32,3 +32,10 @@ watchEffect(() => {
 });
 
 </script>
+
+<style scoped>
+.peers-container {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+</style>

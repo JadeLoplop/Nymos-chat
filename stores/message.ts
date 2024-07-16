@@ -48,9 +48,30 @@ export const useMessageStore = defineStore('message', {
                     message,
                     timestamp: new Date().toISOString()
                 });
+
+                await this.saveChatRoomInfo(uid1, uid2);
                 console.log('Message saved successfully.');
             } catch (error) {
                 console.error('Error saving message:', error.message);
+            }
+        },
+
+        async saveChatRoomInfo(uid1: string, uid2: string) {
+            const db = getDatabase();
+            const user1ChatRef = ref(db, `user_chats/${uid1}/${uid2}`);
+            const user2ChatRef = ref(db, `user_chats/${uid2}/${uid1}`);
+        
+            const chatInfo = {
+                lastMessageAt: new Date().toISOString(),
+                users: [uid1, uid2]
+            };
+        
+            try {
+                await set(user1ChatRef, chatInfo);
+                await set(user2ChatRef, chatInfo);
+                console.log('Chat room info saved successfully.');
+            } catch (error) {
+                console.error('Error saving chat room info:', error.message);
             }
         },
 

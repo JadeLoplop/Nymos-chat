@@ -15,20 +15,18 @@
 <script setup>
 import PeersComponent from './PeersComponent.vue';
 import ChatComponent from './ChatComponent.vue';
+import { useAuthStore } from '~/stores/auth';
 
 const selectedPeer = ref(null);
 
 const handleSelectUser = (user) => {
-  console.log(user);
   selectedPeer.value = user;
 };
 
 watchEffect(() => {
-  console.log('watching');
   if (selectedPeer.value) {
     console.log(selectedPeer.value);
   }
- 
 });
 
 </script>

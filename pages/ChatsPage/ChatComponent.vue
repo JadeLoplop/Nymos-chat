@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-card v-if="peer">
+    <v-card v-if="peer && authStore.user">
       <v-card-title>Chat with {{ peer.displayName }}</v-card-title>
       <hr>
       <v-card-text>
@@ -59,7 +59,6 @@ watch(
   () => props.peer,
   async (newPeer) => {
     if (newPeer) {
-      console.log('asd');
       scrollToBottom();
     }
   },
@@ -69,7 +68,6 @@ watch(
 watch(
   () => messages.value,
   () => {
-    console.log('asd');
     scrollToBottom();
   }
 );
@@ -85,12 +83,17 @@ const sendMessage = async () => {
 };
 
 const formatTimestamp = (timestamp) => {
-  return format(new Date(timestamp), 'yyyy-MM-dd HH:mm'); // Example format
-};
+  return format(new Date(timestamp), 'yyyy-MM-dd HH:mm'); // Example formatd
+}
 
 watchEffect(() => {
   currentUser.value = authStore.user
-  if (props.peer) {
+  
+  if (!currentUser.value) {
+    console.log('asd');
+    props.peer = {}
+  } else {
+    if (props.peer) {
     console.log('Selected Peer:', props.peer.uid);
 
     const roomId = messageStore.generateRoomId(currentUser.value.uid, props.peer.uid);
@@ -98,6 +101,7 @@ watchEffect(() => {
       console.log('newMessages', newMessages);
       messages.value = newMessages;
     });
+  }
   }
 });
 </script>

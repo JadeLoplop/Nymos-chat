@@ -65,12 +65,6 @@ const selectUser = (user) => {
   emits('select-user', user);
 };
 
-onMounted(() => {
-  if (authStore.user) {
-    peerStore.getPreviouslyContactedPeers(authStore.user.uid)
-  }
-});
-
 watch(peer)
 watch(users)
 watch(peerStore.fetchAllPeers, (newPeers) => {
@@ -79,7 +73,11 @@ watch(peerStore.fetchAllPeers, (newPeers) => {
 });
 
 watchEffect(() => {
-
+  if (authStore.user) {
+    peerStore.getPreviouslyContactedPeers(authStore.user.uid)
+  } else {
+    peers.value = []
+  }
 })
 </script>
 

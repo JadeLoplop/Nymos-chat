@@ -1,0 +1,17 @@
+/* vuetify-theme.css */
+
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+  }
+  
+  :root {
+    --v-primary-base: #FF5722; /* Orange shade */
+    --v-secondary-base: #FFCDD2; /* Light red shade */
+    --v-accent-base: #E64A19; /* Dark orange shade */
+    --v-error-base: #FF5252;
+    --v-info-base: #2196F3;
+    --v-success-base: #4CAF50;
+    --v-warning-base: #FFC107;
+  }
+  

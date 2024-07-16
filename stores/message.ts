@@ -83,6 +83,9 @@ export const useMessageStore = defineStore('message', {
                 const messages = snapshot.val();
                 callback(messages ? Object.values(messages) : []);
             });
-        }
+        },
+        reset() {
+            this.$reset();
+          },
     },
 });

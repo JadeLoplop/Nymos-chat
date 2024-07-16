@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'firebase/auth';
 import { getDatabase, ref, set, get } from 'firebase/database';
 import { StorageSerializers, useStorage } from '@vueuse/core';
+import { usePeerStore } from './peer';
 
 interface User {
   uid: string;
@@ -44,7 +45,8 @@ export const useAuthStore = defineStore('auth', {
       try {
         await signOut(auth);
         this.user = null;
-
+        // this.reset()
+        // this.resetStores()
         
       } catch (error) {
         console.error('Sign out error:', error.message);
@@ -105,6 +107,14 @@ export const useAuthStore = defineStore('auth', {
         console.error('Error saving users to Firebase:', error);
       }
     },
+    // reset() {
+    //   this.$reset();
+    // },
+    // resetStores() {
+    //   const peerStore = usePeerStore();
+    //   peerStore.reset();
+    //   // Add other stores here if needed
+    // }
   },
   getters: {
     fetchSavedUser: (state) => state.user,

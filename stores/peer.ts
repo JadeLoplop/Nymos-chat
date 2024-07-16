@@ -13,13 +13,13 @@ export const usePeerStore = defineStore('peer', {
 
     actions: {
         async getPreviouslyContactedPeers(userId: string) {
+            
             const db = getDatabase();
             const userChatsRef = ref(db, `user_chats/${userId}`);
             const snapshot = await get(userChatsRef);
             
             if (snapshot.exists()) {
                 const chatRooms = snapshot.val();
-                
                 
                 for (const [peerId, chatInfo] of Object.entries(chatRooms)) {
                     const peerData = {
@@ -29,6 +29,7 @@ export const usePeerStore = defineStore('peer', {
                     };
                     this.peers.push(peerData);
                 }
+
             } else {
                 console.log('No chat rooms found for this user.');
             }
@@ -69,7 +70,11 @@ export const usePeerStore = defineStore('peer', {
 
         storeSelectedPeer(peer){
             this.selectedPeer = peer
-        }
+        },
+
+        reset() {
+            this.$reset();
+          },
 
     },
 

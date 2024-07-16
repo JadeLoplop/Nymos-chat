@@ -1,12 +1,13 @@
 <template>
     <v-app-bar app color="primary" dark>
-      <v-toolbar-title>My Chat Application</v-toolbar-title>
+      <v-toolbar-title>Nymos Chat</v-toolbar-title>
       <v-spacer></v-spacer>
       <template v-if="!user">
         <v-btn @click="signInWithGoogle">Google Login</v-btn>
-        <v-btn @click="guestLogin">Guest Login</v-btn>
+        <!-- <v-btn @click="guestLogin">Guest Login</v-btn> -->
       </template>
       <template v-else>
+        <span>Current user : {{ user.displayName }}</span>
         <v-btn @click="signOut">Logout</v-btn>
         <v-btn @click="createDummyUsers">createDummyUsers</v-btn>
       </template>
@@ -29,7 +30,7 @@
 
   
   const signInWithGoogle = () => authStore.signInWithGoogle();
-  const guestLogin = () => authStore.guestLogin();
+  // const guestLogin = () => authStore.guestLogin();
   const signOut = () => authStore.signOut();
   
   

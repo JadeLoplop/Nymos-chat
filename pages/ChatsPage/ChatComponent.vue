@@ -47,10 +47,7 @@ const currentUser = ref('');
 const scrollToBottom = () => {
   const container = document.getElementById('messagesContainer');
   if (container) {
-    console.log('asdasd', container);
     container.scrollTop = container.scrollHeight
-  } else {
-    console.log('scrool noooo', container);
   }
  
 };
@@ -90,15 +87,11 @@ watchEffect(() => {
   currentUser.value = authStore.user
   
   if (!currentUser.value) {
-    console.log('asd');
     props.peer = {}
   } else {
     if (props.peer) {
-    console.log('Selected Peer:', props.peer.uid);
-
     const roomId = messageStore.generateRoomId(currentUser.value.uid, props.peer.uid);
     messageStore.getMessages(roomId, (newMessages) => {
-      console.log('newMessages', newMessages);
       messages.value = newMessages;
     });
   }

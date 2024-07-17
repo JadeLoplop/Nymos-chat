@@ -53,8 +53,6 @@ const searchPeers = () => {
     );
   }
 
-  console.log('search value', peers.value);
-
 };
 const emits = defineEmits(['select-user']);
 
@@ -68,7 +66,6 @@ const selectUser = (user) => {
 // watch(peer)
 // watch(users)
 watch(peerStore.fetchAllPeers, (newPeers) => {
-  console.log('newpeers', newPeers);
   peers.value = newPeers;
 });
 

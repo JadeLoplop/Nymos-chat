@@ -19,13 +19,11 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async signInWithGoogle() {
       const auth = getAuth();
-      console.log('auth', auth);
       
       const provider = new GoogleAuthProvider();
       try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
-        console.log('user', user);
         
         this.user = {
           uid: user.uid,

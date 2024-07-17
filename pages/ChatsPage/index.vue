@@ -23,12 +23,6 @@ const handleSelectUser = (user) => {
   selectedPeer.value = user;
 };
 
-watchEffect(() => {
-  if (selectedPeer.value) {
-    console.log(selectedPeer.value);
-  }
-});
-
 </script>
 
 <style scoped>

@@ -33,6 +33,8 @@ export const useAuthStore = defineStore('auth', {
         };
 
         await this.addUserToDatabaseIfNotExists(this.user);
+        
+        
       } catch (error) {
         console.error('Google sign-in error:', error.message);
       }
@@ -43,8 +45,8 @@ export const useAuthStore = defineStore('auth', {
       try {
         await signOut(auth);
         this.user = null;
-        // this.reset()
-        // this.resetStores()
+        usePeerStore().clearPeers();
+
         
       } catch (error) {
         console.error('Sign out error:', error.message);
@@ -72,8 +74,9 @@ export const useAuthStore = defineStore('auth', {
       try {
         const snapshot = await get(userRef);
         if (!snapshot.exists()) {
-          await set(userRef, user);
+          await set(userRef, user).then(location.reload());
           console.log(`User ${user.displayName} added to database.`);
+          
         } else {
           console.log(`User ${user.displayName} already exists in the database.`);
         }

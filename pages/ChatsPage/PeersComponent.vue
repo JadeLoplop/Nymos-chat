@@ -65,7 +65,8 @@ const selectUser = (user) => {
 
 // watch(peer)
 // watch(users)
-watch(peerStore.fetchAllPeers, (newPeers) => {
+watch(() => peerStore.fetchAllPeers, (newPeers) => {
+  console.log('fetching all peers');
   peers.value = newPeers;
 });
 
@@ -78,7 +79,9 @@ watch(peerStore.fetchAllPeers, (newPeers) => {
 // })
 
 watchEffect(() => {
+  console.log('trigger watch effect');
   if (authStore.user) {
+    console.log('trigger retrieve prev peers');
     peerStore.getPreviouslyContactedPeers(authStore.user.uid)
   } else {
     peers.value = []

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { getDatabase, ref, set, get, push, onValue } from 'firebase/database';
+import { usePeerStore } from './peer';
 
 interface Message {
     uid: string;
@@ -50,7 +51,19 @@ export const useMessageStore = defineStore('message', {
                 });
 
                 await this.saveChatRoomInfo(uid1, uid2);
+
+                
                 console.log('Message saved successfully.');
+
+                const peerStore = usePeerStore();
+                // await peerStore.getPreviouslyContactedPeers(uid1);
+                // await peerStore.getPreviouslyContactedPeers(uid2);
+
+                const receiverPeers = await peerStore.checkIfPeerExists(uid2, uid1);
+                if (!receiverPeers) {
+                  await peerStore.getPreviouslyContactedPeers(uid2);
+                }
+
             } catch (error) {
                 console.error('Error saving message:', error.message);
             }
